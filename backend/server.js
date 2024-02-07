@@ -79,8 +79,8 @@ async function getMultipleChoice(transcript) {
  */
 function decodeTranscript(transcriptList) {
     var s = "";
-    transcriptList.forEach((element) => {
-        s += element["text"];
+    transcriptList.forEach((transcriptSegment) => {
+        s += transcriptSegment["text"];
     });
     return s;
 }
