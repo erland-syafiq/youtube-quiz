@@ -33,7 +33,7 @@ const openai = new OpenAI({
  */
 app.get("/quiz", async (req, res) => {
     try {
-        const transcriptJSON = await YoutubeTranscript.fetchTranscript("https://www.youtube.com/watch?v=n2Fluyr3lbc");
+        const transcriptJSON = await YoutubeTranscript.fetchTranscript("https://www.youtube.com/watch?v=x7X9w_GIm1s");
         const transcript = decodeTranscript(transcriptJSON);
         const question = await getTestQuestion(transcript);
         
@@ -52,7 +52,7 @@ app.get("/quiz", async (req, res) => {
 /**
  * Sends welcome message at root of api
  */
-get('/', (req, res) => {
+app.get('/', (req, res) => {
     res.send("Welcome to the Youtube Quizzer API!");
 })
 
@@ -88,7 +88,7 @@ async function getMultipleChoice(transcript) {
  */
 async function getTestQuestion(transcript) {
     const data = await fs.readFile("test-question.json", {encoding :'utf8'});
-    return data;
+    return JSON.parse(data);
 
 }
 
