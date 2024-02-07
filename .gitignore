@@ -1,0 +1,3 @@
+# Backend files to ignore
+
+backend/node_modules
