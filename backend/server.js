@@ -23,10 +23,13 @@ const openai = new OpenAI({
     apiKey: process.env['OPENAI_API_KEY'],
 })
 
-
-// https://www.youtube.com/watch?v=n2Fluyr3lbc
 /**
+ * Takes a Youtube url and sends a json list of questions
  * 
+ * req: 
+ * 
+ * 
+ * Example: https://www.youtube.com/watch?v=n2Fluyr3lbc
  */
 app.get("/quiz", async (req, res) => {
     try {
@@ -40,24 +43,16 @@ app.get("/quiz", async (req, res) => {
     catch (e) {
         console.log(e);
         res.status(400).json({
-            "message": "Invalid url"
+            "message": e
         });
     }
     
 })
 
-app.get('/test', async (req, res) => {
-    factsResponse = await fetch("https://cat-fact.herokuapp.com/facts");
-    if (factsResponse.ok) {
-        const data = await factsResponse.json();
-        res.json(data);
-    }
-    else {
-        console.log(factsResponse)
-    }
-})
-
-app.get('/', (req, res) => {
+/**
+ * Sends welcome message at root of api
+ */
+get('/', (req, res) => {
     res.send("Welcome to the Youtube Quizzer API!");
 })
 
