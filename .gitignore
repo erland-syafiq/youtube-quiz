@@ -1,3 +1,6 @@
-# Backend files to ignore
+# All files to ignore
+.tmp
 
+# Backend files to ignore
 backend/node_modules
+
