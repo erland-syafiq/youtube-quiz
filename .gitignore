@@ -1,5 +1,6 @@
 # All files to ignore
 .tmp
+.env
 
 # Backend files to ignore
 backend/node_modules

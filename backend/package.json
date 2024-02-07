@@ -5,14 +5,16 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "devStart": "nodemon server.js",
+    "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.1",
     "express": "^4.18.2",
+    "openai": "^4.26.1",
     "youtube-transcript": "^1.0.6"
   },
   "devDependencies": {
