@@ -1,0 +1,13 @@
+.highlight {
+    background-color: var(--secondary);
+    display: inline-block;
+    margin-bottom: var(--default-padding);
+}
+
+.h1 {
+    color: white;
+    padding-left: var(--default-padding);
+    padding-right: var(--default-padding);
+    display: inline-block;
+}
+

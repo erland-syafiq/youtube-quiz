@@ -3,6 +3,13 @@
     --secondary: #E75F24;
     --primary: #19C37D;
     --tertiary: #96FFE6;
+    --default-padding: 20px;
+}
+
+body {
+    width: 374px;
+    margin: 0px;
+    border: 1px solid black;
 }
 
 h1 {
