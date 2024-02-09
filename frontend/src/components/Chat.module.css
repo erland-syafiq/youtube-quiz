@@ -1,0 +1,23 @@
+.chat {
+    width: 100%;
+    min-height: 333px;
+    background-color: var(--primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.loadingSubtitle {
+    color: white;
+}
+
+.loading {
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
