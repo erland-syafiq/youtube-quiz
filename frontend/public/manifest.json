@@ -1,11 +1,15 @@
 {
     "manifest_version": 3,
     "name": "AI Video Quizzer",
-    "description": "Tests your knowledge by creating quesetions for you to answer using AI.",
+    "host_permissions": ["https://.youtube.com/*"],
+    "description": "Ask Quizzer for help on any video. Let Quizzer test your knowledge, using AI! Learn and have fun!.",
+    "background": {
+        "service_worker": "background.js"
+    },
     "version": "1.0.0",
     "action": {
         "default_popup": "index.html",
         "default_title": "Open"
     },
-    "permission": ["scripting"]
+    "permissions": ["storage", "tabs"]
 }
