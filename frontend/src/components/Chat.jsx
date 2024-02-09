@@ -2,35 +2,48 @@ import React, { useEffect, useRef } from 'react';
 import styles from './Chat.module.css';
 import loading from '../assets/loading.svg';
 import isExtension from '../isExtension.js';
-import useWebSocket from 'react-use-websocket';
+import useWebSocket, {ReadyState} from 'react-use-websocket';
 
-function backendConnect(url) {
-    if (!url) {
-        console.log(`Error: Url, ${url}, undefined`);
-    }
-    console.log(`Reading transcript from url: ${url}`);
-}
+const DEFAULT_URL = "https://www.youtube.com/watch?v=x7X9w_GIm1s";
+const WS_URL = "ws://localhost:8080/";
 
 function Chat() {
-    const connection = useRef(null);
+    const {sendJsonMessage, lastJsonMessage, readyState} = useWebSocket(
+        WS_URL,
+        {
+            share: false,
+            shouldReconnect: () => true,
+        }
+    );
+
+    function connectChat(url) {
+        if (readyState === ReadyState.OPEN) {
+            sendJsonMessage({
+                event: "meta",
+                data: {
+                    "url": url
+                }
+            });
+        }
+    }
+
+    function onReceived(event) {
+        const socket = connection.current;
+        console.log(event.data);
+    }
 
     useEffect(() => {
-        const socket = new WebSocket("ws://localhost:8080/");
+        console.log("Connection state changed");
 
-        socket.addEventListener("open", (event) => {
-            socket.send("Connection established");
-        });
-    
-        socket.addEventListener("message", (event) => {
-            console.log("Message from server ", event.data);
-        });
-    
-        connection.current = socket;
-        console.log("Component has mounted");
-        if (isExtension()) {
-            chrome.storage.local.get("tab_url", backendConnect)
-        }
-    }, []);
+        if (isExtension()) 
+            chrome.storage.local.get("tab_url", connectChat)
+        else
+            connectChat(DEFAULT_URL);
+    }, [readyState]);
+
+    useEffect(() => {
+        console.log(`Got a new message: ${lastJsonMessage}`)
+    }, [lastJsonMessage]);
 
     return (
         <div className={styles.chat}>     
