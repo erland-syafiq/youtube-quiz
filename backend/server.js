@@ -26,8 +26,11 @@ const openai = new OpenAI({
 })
 
 app.ws("/", (ws, req) => {
-    ws.on('message', (msg) => {
-        console.log(`Message: ${msg}`);
+    ws.on('message', async (msg) => {
+        console.log(msg);
+        //ws.send("{\"example\": \"json\"}");
+        const transcript = await getTestQuestion("t");
+        ws.send(transcript);
     });
     console.log("Socket initialized");
 })
@@ -96,8 +99,8 @@ async function getMultipleChoice(transcript) {
  * @returns {string}
  */
 async function getTestQuestion(transcript) {
-    const data = await fs.readFile("test-question.json", {encoding :'utf8'});
-    return JSON.parse(data);
+    const data = await fs.readFile("test-question.txt", {encoding :'utf8'});
+    return data;
 
 }
 

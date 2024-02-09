@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Chat.module.css';
 import loading from '../assets/loading.svg';
 import isExtension from '../isExtension.js';
@@ -8,6 +8,8 @@ const DEFAULT_URL = "https://www.youtube.com/watch?v=x7X9w_GIm1s";
 const WS_URL = "ws://localhost:8080/";
 
 function Chat() {
+    const [messages, setMessages] = useState([]);
+
     const {sendJsonMessage, lastJsonMessage, readyState} = useWebSocket(
         WS_URL,
         {
@@ -27,9 +29,8 @@ function Chat() {
         }
     }
 
-    function onReceived(event) {
-        const socket = connection.current;
-        console.log(event.data);
+    function onReceived() {
+        console.log(lastJsonMessage)
     }
 
     useEffect(() => {
@@ -41,9 +42,7 @@ function Chat() {
             connectChat(DEFAULT_URL);
     }, [readyState]);
 
-    useEffect(() => {
-        console.log(`Got a new message: ${lastJsonMessage}`)
-    }, [lastJsonMessage]);
+    useEffect(onReceived, [lastJsonMessage]);
 
     return (
         <div className={styles.chat}>     
