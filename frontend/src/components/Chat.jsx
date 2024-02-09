@@ -30,7 +30,13 @@ function Chat() {
     }
 
     function onReceived() {
-        console.log(lastJsonMessage)
+        if (!lastJsonMessage) {
+            return;
+        }
+        if (messages && messages.length > 0 && Object.entries(lastJsonMessage).toString() === Object.entries(messages.at(-1)).toString()){
+            return;
+        }
+        setMessages([...messages, lastJsonMessage])
     }
 
     useEffect(() => {
@@ -44,12 +50,27 @@ function Chat() {
 
     useEffect(onReceived, [lastJsonMessage]);
 
+    useEffect(() => {
+        console.log("Messages: ");
+        console.log(messages);
+    })
+
+    if (!messages)
+        return (
+            <div className={styles.chat}>     
+                    <img src={loading} className={styles.loading}></img>
+                    <h2 className={styles.loadingSubtitle}>Loading transcript...</h2>
+            </div>
+        );
     return (
-        <div className={styles.chat}>     
-                <img src={loading} className={styles.loading}></img>
-                <h2 className={styles.loadingSubtitle}>Loading transcript...</h2>
+        <div className={styles.chat}>
+            <ul>
+                {messages.map(message => (
+                    <li key={message.id}>{message.data["message"]}</li>
+                ))}
+            </ul>
         </div>
-    );
+    )
 };
 
 export default Chat;

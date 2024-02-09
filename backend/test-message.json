@@ -1,0 +1,6 @@
+{
+    "event": "bot",
+    "data" : {
+        "message": "Hello how can I help you?"
+    }
+}

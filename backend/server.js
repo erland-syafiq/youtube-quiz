@@ -29,8 +29,8 @@ app.ws("/", (ws, req) => {
     ws.on('message', async (msg) => {
         console.log(msg);
         //ws.send("{\"example\": \"json\"}");
-        const transcript = await getTestQuestion("t");
-        ws.send(transcript);
+        const message = await getTestMessage();
+        ws.send(message);
     });
     console.log("Socket initialized");
 })
@@ -47,7 +47,7 @@ app.get("/quiz", async (req, res) => {
     try {
         const transcriptJSON = await YoutubeTranscript.fetchTranscript("https://www.youtube.com/watch?v=x7X9w_GIm1s");
         const transcript = decodeTranscript(transcriptJSON);
-        const question = await getTestQuestion(transcript);
+        const question = await getTestQuestion(transcript)
         
         res.json(question);
 
@@ -102,6 +102,13 @@ async function getTestQuestion(transcript) {
     const data = await fs.readFile("test-question.txt", {encoding :'utf8'});
     return data;
 
+}
+
+async function getTestMessage() {
+    let messageJSON = await fs.readFile("test-message.json", {encoding: 'utf8'});
+    messageJSON = JSON.parse(messageJSON);
+    messageJSON.id = Math.random(9999);
+    return JSON.stringify(messageJSON);
 }
 
 
