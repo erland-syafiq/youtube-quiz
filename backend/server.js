@@ -13,14 +13,23 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import OpenAI from 'openai';
 import fs from 'node:fs/promises';
+import wsWrapper from 'express-ws';
 
 dotenv.config();
 const app = express();
 const PORT = 8080;
+const expressWs = wsWrapper(app);
 
 // Set API keys
 const openai = new OpenAI({
     apiKey: process.env['OPENAI_API_KEY'],
+})
+
+app.ws("/", (ws, req) => {
+    ws.on('message', (msg) => {
+        console.log(`Message: ${msg}`);
+    });
+    console.log("Socket initialized");
 })
 
 /**
@@ -109,4 +118,6 @@ function decodeTranscript(transcriptList) {
     return s;
 }
 
-app.listen(PORT);
+app.listen(PORT, () => {
+    console.log(`Running on: http://localhost:${PORT} `);
+});
