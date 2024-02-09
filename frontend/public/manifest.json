@@ -8,6 +8,7 @@
     },
     "version": "1.0.0",
     "action": {
+        "default_icon": "logo.png",
         "default_popup": "index.html",
         "default_title": "Open"
     },
