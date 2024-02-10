@@ -1,0 +1,18 @@
+.ChatBubble {
+    background-color: var(--tertiary);
+    align-self: flex-end;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 3px;
+    margin-bottom: 3px
+}
+
+
+.ChatBubbleBot {
+    align-self: flex-start;
+}
+
+
+.ChatBubbleUser {
+    align-self: flex-end;
+}

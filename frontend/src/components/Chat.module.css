@@ -1,11 +1,41 @@
 .chat {
+    box-sizing: border-box;
     width: 100%;
-    min-height: 333px;
+    height: 333px;
     background-color: var(--primary);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    padding: var(--default-padding);
+    overflow-y: auto;
+}
+
+.form {
+    margin-top: var(--default-padding);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.input {
+    width: 125px;
+    padding: 0px;
+    border: 1px solid black;
+    font-size: 10px;
+    height: 23px;
+}
+
+.submit {
+    background-color: white;
+    border: 0px;
+    font-size: 10px;
+    height: 23px;
+}
+
+.input:active {
+    background-color: grey;
 }
 
 .loadingSubtitle {
