@@ -1,9 +1,14 @@
 :root {
+    box-sizing: border-box;
     font-family: "Poppins", sans-serif;
     --secondary: #E75F24;
     --primary: #19C37D;
     --tertiary: #96FFE6;
     --default-padding: 20px;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
 }
 
 body {
