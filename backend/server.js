@@ -14,6 +14,7 @@ import * as dotenv from 'dotenv';
 import OpenAI from 'openai';
 import fs from 'node:fs/promises';
 import wsWrapper from 'express-ws';
+import { decode } from 'node:punycode';
 
 dotenv.config();
 const app = express();
@@ -26,14 +27,72 @@ const openai = new OpenAI({
 })
 
 app.ws("/", (ws, req) => {
+    const messageHistory = [];
+    const systemMessage = {
+        "role": "system", 
+        "content": "First. Say Hi! Keep the messages to one sentence. You are a tutor chat bot to help the user, a student understand the material in a video. Learn from the video transcript below: "
+    }
+    var transcript;
+
     ws.on('message', async (msg) => {
+        msg = JSON.parse(msg);
         console.log(msg);
-        //ws.send("{\"example\": \"json\"}");
-        const message = await getTestMessage();
-        ws.send(message);
+        const TYPE = msg["event"];
+
+        if (TYPE == "meta") {
+            console.log("Meta Message");
+            const url = msg["data"]["tab_url"];
+            const transcriptJSON = await YoutubeTranscript.fetchTranscript(url);
+            transcript = decodeTranscript(transcriptJSON);
+            systemMessage["content"] += transcript;
+            messageHistory.push(systemMessage);
+            console.log(messageHistory);
+
+            const botMessage = await getBotMessage(messageHistory);
+
+            ws.send(botMessage);
+        }
+        if (TYPE == "user") {
+            console.log("User Message");
+            messageHistory.push({
+                "role": "user",
+                "content": msg["data"]["message"]
+            });
+            const botMessage = await getBotMessage(messageHistory);
+            ws.send(botMessage);
+        }
     });
     console.log("Socket initialized");
 })
+
+
+async function getBotMessage(messageHistory) {
+    const chatCompletion = await openai.chat.completions.create({
+        messages: messageHistory,
+        model: 'gpt-3.5-turbo'
+    });
+
+    const botMessage = chatCompletion.choices[0].message.content;
+    const botMessageJSON = createMessageJSON(botMessage);
+    console.log(botMessageJSON);
+    return JSON.stringify(botMessageJSON);
+}
+
+function createMessageJSON(message) {
+    return {
+        "event": "bot",
+        "data": {
+            "message": message
+        },
+        "id": Math.random()
+    };
+}
+
+function decodeBotJSON(messageJSON) {
+    console.log(messageJSON)
+
+    return JSON.stringify(messageJSON);
+}
 
 /**
  * Takes a Youtube url and sends a json list of questions

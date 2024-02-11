@@ -16,20 +16,9 @@ function Chat() {
         WS_URL,
         {
             share: false,
-            shouldReconnect: () => true,
+            shouldReconnect: () => false,
         }
     );
-
-    function connectChat(url) {
-        if (readyState === ReadyState.OPEN) {
-            sendJsonMessage({
-                event: "meta",
-                data: {
-                    "url": url
-                }
-            });
-        }
-    }
 
     function recordMessage() {
         if (!lastJsonMessage) {
@@ -41,21 +30,26 @@ function Chat() {
         setMessages([...messages, lastJsonMessage])
     }
 
+    function connectChat(tab_url) {
+        sendJsonMessage({
+            event: "meta",
+            data: tab_url
+        });
+    }
+
     useEffect(() => {
-        console.log("Connection state changed");
+        if (readyState != ReadyState.OPEN) 
+            return;
 
         if (isExtension()) 
-            chrome.storage.local.get("tab_url", connectChat)
+            chrome.storage.local.get("tab_url", connectChat);
         else
-            connectChat(DEFAULT_URL);
+            connectChat({
+                tab_url: DEFAULT_URL
+            });
     }, [readyState]);
 
     useEffect(recordMessage, [lastJsonMessage]);
-
-    useEffect(() => {
-        console.log("Messages: ");
-        console.log(messages);
-    })
 
     function handleChange(event) {
         setCurrMessage(event.target.value)
@@ -63,6 +57,9 @@ function Chat() {
 
     function handleSubmit(event) {
         event.preventDefault();
+        if (!currMessage) {
+            return;
+        }
         const message = {
             event: 'user',
             data: {
