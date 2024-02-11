@@ -34,11 +34,8 @@ app.ws("/", (ws, req) => {
     }
     var transcript;
 
-    ws.on('message', async (msg) => {
-        const userMessage = JSON.parse(msg);
-        
-        console.log("Socket initialized");
-        // console.log(msg);
+    ws.on('message', async (raw_message) => {
+        const userMessage = JSON.parse(raw_message);
         const TYPE = userMessage["role"];
 
         if (TYPE == "meta") {
@@ -47,8 +44,6 @@ app.ws("/", (ws, req) => {
             transcript = decodeTranscript(transcriptJSON);
             systemMessage["content"] += transcript;
             recordMessage(systemMessage);
-            
-
             const botMessageJSON = await getBotMessageJSON(messageHistory);
             recordMessage(botMessageJSON);
 
