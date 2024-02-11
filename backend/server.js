@@ -56,7 +56,7 @@ app.ws("/", (ws, req) => {
         if (TYPE == "user") {
             messageHistory.push({
                 "role": "user",
-                "content": msg["content"]["message"]
+                "content": msg["content"]
             });
             const botMessage = await getBotMessage(messageHistory);
             ws.send(botMessage);
@@ -82,9 +82,7 @@ async function getBotMessage(messageHistory) {
 function createMessageJSON(message) {
     return {
         "role": "bot",
-        "content": {
-            "message": message
-        },
+        "content": message,
         "id": Math.random()
     };
 }

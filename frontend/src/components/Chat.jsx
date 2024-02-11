@@ -62,9 +62,7 @@ function Chat() {
         }
         const message = {
             role: 'user',
-            content: {
-                "message": currMessage
-            },
+            content: currMessage,
             id: Math.random(99999)
         }
         setMessages([...messages, message]);
@@ -82,7 +80,7 @@ function Chat() {
     return (
         <div className={styles.chat}>
             { messages.map((message) => (
-                <ChatBubble key={message.id} message={message.content["message"]} role={message.role} />
+                <ChatBubble key={message.id} message={message.content} role={message.role} />
             ))}
             <form onSubmit={handleSubmit} className={styles.form}>  
                 <input type="text" className={styles.input} value={currMessage} onChange={handleChange}/>
