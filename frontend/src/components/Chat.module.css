@@ -8,6 +8,8 @@
     justify-content: flex-end safe;
     padding: var(--default-padding);
     overflow-y: auto;
+    scrollbar-color: var(--tertiary) var(--primary);
+    scrollbar-width: thin;
 }
 
 .form {
