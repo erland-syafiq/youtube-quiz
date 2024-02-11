@@ -15,4 +15,5 @@
 
 .ChatBubbleUser {
     align-self: flex-end;
+    text-align: right;
 }
