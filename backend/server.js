@@ -14,7 +14,6 @@ import * as dotenv from 'dotenv';
 import OpenAI from 'openai';
 import fs from 'node:fs/promises';
 import wsWrapper from 'express-ws';
-import { decode } from 'node:punycode';
 
 dotenv.config();
 const app = express();
@@ -32,7 +31,6 @@ app.ws("/", (ws, req) => {
         "role": "system", 
         "content": "First. Say Hi! Keep the messages to one sentence. You are a tutor chat bot to help the user, a student understand the material in a video. Learn from the video transcript below: "
     }
-    var transcript;
 
     ws.on('message', async (raw_message) => {
         const userMessage = JSON.parse(raw_message);
@@ -41,22 +39,18 @@ app.ws("/", (ws, req) => {
         if (TYPE == "meta") {
             const url = userMessage.content;
             const transcriptJSON = await YoutubeTranscript.fetchTranscript(url);
-            transcript = decodeTranscript(transcriptJSON);
+            const transcript = decodeTranscript(transcriptJSON);
             systemMessage["content"] += transcript;
             recordMessage(systemMessage);
             const botMessageJSON = await getBotMessageJSON(messageHistory);
             recordMessage(botMessageJSON);
-
             const botMessage = JSON.stringify(botMessageJSON);
-
             ws.send(botMessage);
         }
         if (TYPE == "user") {
             recordMessage(userMessage);
             const botMessageJSON = await getBotMessageJSON(messageHistory);
             recordMessage(botMessageJSON);
-            
-
             const botMessage = JSON.stringify(botMessageJSON);
             ws.send(botMessage);
         }
