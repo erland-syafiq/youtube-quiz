@@ -32,8 +32,8 @@ function Chat() {
 
     function connectChat(tab_url) {
         sendJsonMessage({
-            event: "meta",
-            data: tab_url
+            role: "meta",
+            content: tab_url
         });
     }
 
@@ -61,8 +61,8 @@ function Chat() {
             return;
         }
         const message = {
-            event: 'user',
-            data: {
+            role: 'user',
+            content: {
                 "message": currMessage
             },
             id: Math.random(99999)
@@ -82,7 +82,7 @@ function Chat() {
     return (
         <div className={styles.chat}>
             { messages.map((message) => (
-                <ChatBubble key={message.id} message={message.data["message"]} type={message.event} />
+                <ChatBubble key={message.id} message={message.content["message"]} role={message.role} />
             ))}
             <form onSubmit={handleSubmit} className={styles.form}>  
                 <input type="text" className={styles.input} value={currMessage} onChange={handleChange}/>

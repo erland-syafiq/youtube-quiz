@@ -36,33 +36,34 @@ app.ws("/", (ws, req) => {
 
     ws.on('message', async (msg) => {
         msg = JSON.parse(msg);
-        console.log(msg);
-        const TYPE = msg["event"];
+        
+        console.log("Socket initialized");
+        // console.log(msg);
+        const TYPE = msg["role"];
 
         if (TYPE == "meta") {
-            console.log("Meta Message");
-            const url = msg["data"]["tab_url"];
+            const url = msg["content"]["tab_url"];
             const transcriptJSON = await YoutubeTranscript.fetchTranscript(url);
             transcript = decodeTranscript(transcriptJSON);
             systemMessage["content"] += transcript;
             messageHistory.push(systemMessage);
-            console.log(messageHistory);
+            
 
             const botMessage = await getBotMessage(messageHistory);
 
             ws.send(botMessage);
         }
         if (TYPE == "user") {
-            console.log("User Message");
             messageHistory.push({
                 "role": "user",
-                "content": msg["data"]["message"]
+                "content": msg["content"]["message"]
             });
             const botMessage = await getBotMessage(messageHistory);
             ws.send(botMessage);
         }
+        
+        console.log(messageHistory);
     });
-    console.log("Socket initialized");
 })
 
 
@@ -80,8 +81,8 @@ async function getBotMessage(messageHistory) {
 
 function createMessageJSON(message) {
     return {
-        "event": "bot",
-        "data": {
+        "role": "bot",
+        "content": {
             "message": message
         },
         "id": Math.random()
