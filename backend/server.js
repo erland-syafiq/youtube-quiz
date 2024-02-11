@@ -35,48 +35,59 @@ app.ws("/", (ws, req) => {
     var transcript;
 
     ws.on('message', async (msg) => {
-        msg = JSON.parse(msg);
+        const userMessage = JSON.parse(msg);
         
         console.log("Socket initialized");
         // console.log(msg);
-        const TYPE = msg["role"];
+        const TYPE = userMessage["role"];
 
         if (TYPE == "meta") {
-            const url = msg["content"]["tab_url"];
+            const url = userMessage["content"]["tab_url"];
             const transcriptJSON = await YoutubeTranscript.fetchTranscript(url);
             transcript = decodeTranscript(transcriptJSON);
             systemMessage["content"] += transcript;
-            messageHistory.push(systemMessage);
+            recordMessage(systemMessage);
             
 
-            const botMessage = await getBotMessage(messageHistory);
+            const botMessageJSON = await getBotMessageJSON(messageHistory);
+            recordMessage(botMessageJSON);
+
+            const botMessage = JSON.stringify(botMessageJSON);
 
             ws.send(botMessage);
         }
         if (TYPE == "user") {
-            messageHistory.push({
-                "role": "user",
-                "content": msg["content"]
-            });
-            const botMessage = await getBotMessage(messageHistory);
+            recordMessage(userMessage);
+            const botMessageJSON = await getBotMessageJSON(messageHistory);
+            recordMessage(botMessageJSON);
+            
+
+            const botMessage = JSON.stringify(botMessageJSON);
             ws.send(botMessage);
         }
         
         console.log(messageHistory);
     });
+
+    function recordMessage(messageJSON) {
+        messageHistory.push({
+            role: messageJSON.role,
+            content: messageJSON.content
+        })
+    }
 })
 
 
-async function getBotMessage(messageHistory) {
+
+async function getBotMessageJSON(messageHistory) {
     const chatCompletion = await openai.chat.completions.create({
         messages: messageHistory,
         model: 'gpt-3.5-turbo'
     });
 
-    const botMessage = chatCompletion.choices[0].message.content;
-    const botMessageJSON = createMessageJSON(botMessage);
-    console.log(botMessageJSON);
-    return JSON.stringify(botMessageJSON);
+    const botMessageJSON = chatCompletion.choices[0].message;
+    botMessageJSON.id = Math.random();
+    return botMessageJSON;
 }
 
 function createMessageJSON(message) {
