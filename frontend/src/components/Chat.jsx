@@ -78,15 +78,18 @@ function Chat() {
             </div>
         );
     return (
-        <div className={styles.chat}>
-            { messages.map((message) => (
-                <ChatBubble key={message.id} message={message.content} role={message.role} />
-            ))}
+        <>
+            <div className={styles.chat}>
+                { messages.map((message) => (
+                    <ChatBubble key={message.id} message={message.content} role={message.role} />
+                ))}
+            </div>
             <form onSubmit={handleSubmit} className={styles.form}>  
                 <input type="text" className={styles.input} value={currMessage} onChange={handleChange}/>
                 <input type="submit" value="Submit" className={styles.submit} />
             </form>
-        </div>
+        </>
+
     )
 };
 
