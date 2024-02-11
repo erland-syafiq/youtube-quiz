@@ -30,10 +30,10 @@ function Chat() {
         setMessages([...messages, lastJsonMessage])
     }
 
-    function connectChat(tab_url) {
+    function connectChat(query) {
         sendJsonMessage({
             role: "meta",
-            content: tab_url
+            content: query.tab_url
         });
     }
 

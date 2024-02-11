@@ -42,7 +42,7 @@ app.ws("/", (ws, req) => {
         const TYPE = userMessage["role"];
 
         if (TYPE == "meta") {
-            const url = userMessage["content"]["tab_url"];
+            const url = userMessage.content;
             const transcriptJSON = await YoutubeTranscript.fetchTranscript(url);
             transcript = decodeTranscript(transcriptJSON);
             systemMessage["content"] += transcript;
@@ -77,8 +77,6 @@ app.ws("/", (ws, req) => {
     }
 })
 
-
-
 async function getBotMessageJSON(messageHistory) {
     const chatCompletion = await openai.chat.completions.create({
         messages: messageHistory,
@@ -88,20 +86,6 @@ async function getBotMessageJSON(messageHistory) {
     const botMessageJSON = chatCompletion.choices[0].message;
     botMessageJSON.id = Math.random();
     return botMessageJSON;
-}
-
-function createMessageJSON(message) {
-    return {
-        "role": "bot",
-        "content": message,
-        "id": Math.random()
-    };
-}
-
-function decodeBotJSON(messageJSON) {
-    console.log(messageJSON)
-
-    return JSON.stringify(messageJSON);
 }
 
 /**
