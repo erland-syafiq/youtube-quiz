@@ -10,10 +10,12 @@
 
 .ChatBubbleBot {
     align-self: flex-start;
+    border-left: 3px solid var(--secondary);
 }
 
 
 .ChatBubbleUser {
     align-self: flex-end;
     text-align: right;
+    border-right: 3px solid var(--secondary);
 }
